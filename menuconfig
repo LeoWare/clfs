@@ -19,20 +19,18 @@ LFS=/mnt/clfs
 
 # Where to build the tool chain
 TOOLS=/tools
+CROSS_TOOLS=/cross_tools
 
 # Where the build system is installed
 # This directory is appended to $LFS
 _PARENT=/usr/src/clfs
 HOST_TOP=$_PARENT
-
-
 LFS_TOP=$_PARENT
 
 # LFS user name
 # System will build with this user
 LFS_USER="lfs"
 USER=$LFS_USER
-
 
 LFS_PASSWORD=""
 ROOT_PASSWORD=""
@@ -59,12 +57,9 @@ FILESYSTEM=ext4
 LOGFILE="$(date +%Y-%m-%d).log"
 
 # Directories
-SOURCESDIR="SOURCES"
-BUILDDIR="BUILD"
-BUILDROOTDIR="BUILDROOT"
-RPMSDIR="RPMS"
-SRPMSDIR="SRPMS"
-LOGDIR="LOGS"
+SOURCESDIR="sources"
+BUILDDIR="build"
+LOGDIR="logs"
 
 
 #--- Read configuration file
@@ -155,7 +150,8 @@ function menu_filesystem() {
 			2 "Build system top directory: LFS#(LFS_TOP)" \
 			3 "LFS partition mount point#(LFS)" \
 			4 "Toolchain directory#(TOOLS)" \
-			5 "LFS partition filesystem#(FILESYSTEM)" \
+			5 "Cross-toolchain directory#(CROSS_TOOLS)" \
+			6 "LFS partition filesystem#(FILESYSTEM)" \
 			2>&1 1>&3`
 		_retval=$?
 		exec 3>&-
@@ -175,6 +171,9 @@ function menu_filesystem() {
 					dialog_get_input TOOLS "Toolchain directory (TOOLS)" $TOOLS
 				;;
 				5)	
+					dialog_get_input CROSS_TOOLS "Cross-toolchain directory (CROSS_TOOLS)" $FILESYSTEM
+				;;
+				6)	
 					dialog_get_input FILESYSTEM "LFS partition filesystem (FILESYSTEM)" $FILESYSTEM
 				;;
 			esac
@@ -343,6 +342,7 @@ do
 					LFS=$LFS
 					# Where to build the tool chain
 					TOOLS=$TOOLS
+					CROSS_TOOLS=$CROSS_TOOLS
 					# Where the build system is installed
 					# This directory is appended to $LFS
 					HOST_TOP="$HOST_TOP"
@@ -366,13 +366,10 @@ do
 					FILESYSTEM="$FILESYSTEM"
 					# --- END OF ITEMS CONFIGURED WITH menuconfig  --- #
 					# Name of the log file
-					LOGFILE="$(date +%Y-%m-%d).log"
+					LOGFILE=\$(date +%Y-%m-%d).log
 					# Directories
 					SOURCESDIR="$SOURCESDIR"
 					BUILDDIR="$BUILDDIR"
-					BUILDROOTDIR="$BUILDROOTDIR"
-					RPMSDIR="$RPMSDIR"
-					SRPMSDIR="$SRPMSDIR"
 					LOGDIR="$LOGSDIR"
 				EOF
 				sleep 1
