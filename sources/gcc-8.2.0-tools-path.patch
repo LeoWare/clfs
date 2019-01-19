@@ -1,37 +1,38 @@
-diff -aurp a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
+diff -Naur a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
 --- a/gcc/config/i386/linux64.h	2018-01-03 02:03:58.000000000 -0800
-+++ b/gcc/config/i386/linux64.h	2019-01-19 02:31:58.268583760 -0800
-@@ -27,9 +27,9 @@ see the files COPYING3 and COPYING.RUNTI
++++ b/gcc/config/i386/linux64.h	2019-01-19 13:06:44.284084397 -0800
+@@ -27,13 +27,18 @@
  #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
  #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
  
 -#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
--#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
--#define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
-+#define GLIBC_DYNAMIC_LINKER32 "/tools/lib32/ld-linux.so.2"
-+#define GLIBC_DYNAMIC_LINKER64 "/tools/lib64/ld-linux-x86-64.so.2"
-+#define GLIBC_DYNAMIC_LINKERX32 "/tools/libx32/ld-linux-x32.so.2"
++#define GLIBC_DYNAMIC_LINKER32 "/lib32/ld-linux.so.2"
+ #define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
+ #define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
  
  #undef MUSL_DYNAMIC_LINKER32
- #define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-i386.so.1"
-@@ -37,3 +37,8 @@ see the files COPYING3 and COPYING.RUNTI
- #define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-x86_64.so.1"
+-#define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-i386.so.1"
++#define MUSL_DYNAMIC_LINKER32 "/lib32/ld-musl-i386.so.1"
+ #undef MUSL_DYNAMIC_LINKER64
+-#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-x86_64.so.1"
++#define MUSL_DYNAMIC_LINKER64 "/lib64/ld-musl-x86_64.so.1"
  #undef MUSL_DYNAMIC_LINKERX32
- #define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
+-#define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
++#define MUSL_DYNAMIC_LINKERX32 "/libx32/ld-musl-x32.so.1"
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
 +#undef STANDARD_STARTFILE_PREFIX_2
 +#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
 +#define STANDARD_STARTFILE_PREFIX_2 ""
-diff -aurp a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
+diff -Naur a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
 --- a/gcc/config/i386/linux.h	2018-01-03 02:03:58.000000000 -0800
-+++ b/gcc/config/i386/linux.h	2019-01-19 02:29:29.717546168 -0800
-@@ -20,7 +20,13 @@ along with GCC; see the file COPYING3.
++++ b/gcc/config/i386/linux.h	2019-01-19 13:07:23.323803917 -0800
+@@ -20,7 +20,13 @@
  <http://www.gnu.org/licenses/>.  */
  
  #define GNU_USER_LINK_EMULATION "elf_i386"
 -#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-+#define GLIBC_DYNAMIC_LINKER "/tools/lib32/ld-linux.so.2"
++#define GLIBC_DYNAMIC_LINKER "/lib32/ld-linux.so.2"
  
  #undef MUSL_DYNAMIC_LINKER
  #define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
@@ -41,20 +42,20 @@ diff -aurp a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
 +#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
 +#define STANDARD_STARTFILE_PREFIX_2 ""
 +
-diff -aurp a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
+diff -Naur a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
 --- a/gcc/config/i386/t-linux64	2018-01-03 02:03:58.000000000 -0800
-+++ b/gcc/config/i386/t-linux64	2019-01-19 02:54:26.223539992 -0800
-@@ -34,5 +34,5 @@ comma=,
++++ b/gcc/config/i386/t-linux64	2019-01-19 13:09:27.354922687 -0800
+@@ -34,5 +34,5 @@
  MULTILIB_OPTIONS    = $(subst $(comma),/,$(TM_MULTILIB_CONFIG))
  MULTILIB_DIRNAMES   = $(patsubst m%, %, $(subst /, ,$(MULTILIB_OPTIONS)))
  MULTILIB_OSDIRNAMES = m64=../lib64$(call if_multiarch,:x86_64-linux-gnu)
 -MULTILIB_OSDIRNAMES+= m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:i386-linux-gnu)
-+MULTILIB_OSDIRNAMES+= m32=../lib32$(call if_multiarch,:i386-linux-gnu)
++MULTILIB_OSDIRNAMES+= m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib32)$(call if_multiarch,:i386-linux-gnu)
  MULTILIB_OSDIRNAMES+= mx32=../libx32$(call if_multiarch,:x86_64-linux-gnux32)
-diff -aurp a/gcc/config/linux.h b/gcc/config/linux.h
+diff -Naur a/gcc/config/linux.h b/gcc/config/linux.h
 --- a/gcc/config/linux.h	2018-01-03 02:03:58.000000000 -0800
-+++ b/gcc/config/linux.h	2019-01-19 02:24:04.910648968 -0800
-@@ -208,3 +208,9 @@ see the files COPYING3 and COPYING.RUNTI
++++ b/gcc/config/linux.h	2019-01-19 13:01:28.823426092 -0800
+@@ -208,3 +208,9 @@
  # define TARGET_LIBC_HAS_FUNCTION linux_libc_has_function
  
  #endif
