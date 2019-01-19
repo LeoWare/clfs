@@ -23,6 +23,7 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir

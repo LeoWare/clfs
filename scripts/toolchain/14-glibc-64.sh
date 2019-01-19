@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="glibc"
-_version="2.19"
+_version="2.28"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -23,6 +23,7 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
@@ -42,9 +43,10 @@ build2 "BUILD_CC=\"gcc\" CC=\"${CLFS_TARGET}-gcc ${BUILD64}\" \
     AR=\"${CLFS_TARGET}-ar\" RANLIB=\"${CLFS_TARGET}-ranlib\" \
     ../$_sourcedir/configure --prefix=$TOOLS \
     --host=${CLFS_TARGET} --build=${CLFS_HOST} --libdir=$TOOLS/lib64 \
-    --disable-profile --enable-kernel=2.6.32 \
+    --disable-profile --enable-kernel=3.2 \
     --with-binutils=$CROSS_TOOLS/bin --with-headers=$TOOLS/include \
-    --enable-obsolete-rpc --cache-file=config.cache" $_log
+    --enable-obsolete-rpc libc_cv_forced_unwind=yes          \
+    libc_cv_c_cleanup=yes --cache-file=config.cache" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

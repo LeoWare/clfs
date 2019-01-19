@@ -19,7 +19,7 @@ LFS=/mnt/clfs
 
 # Where to build the tool chain
 TOOLS=/tools
-CROSS_TOOLS=/cross_tools
+CROSS_TOOLS=/cross-tools
 
 # Where the build system is installed
 # This directory is appended to $LFS

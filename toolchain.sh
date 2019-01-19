@@ -33,6 +33,5 @@ do
 
 done
 
-exit 1
-touch "$LOGDIR/toolchain.completed"
+touch "$LFS$LFS_TOP/$LOGDIR/toolchain.completed"
 exit 0

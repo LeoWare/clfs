@@ -23,19 +23,20 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build "+ ./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" "./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" $_log
+build2 "./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" $_log
 
 # build
-build "+ make $MKFLAGS" "make $MKFLAGS" $_log
+build2 "make $MKFLAGS" $_log
 
 # install
-build "+ make install" "make install" $_log
+build2 "make install" $_log
 
 # clean up
 cd ..

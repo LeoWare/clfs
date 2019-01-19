@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="file"
-_version="5.19"
+_version="5.35"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -21,19 +21,20 @@ msg_line "Building $_package-$_version"
 }
 
 # unpack sources
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+build2 "./configure --prefix=$CROSS_TOOLS --disable-static" $_log
 
 # build
-build "  Making... " "make $MKFLAGS" $_log
+build2 "make $MKFLAGS" $_log
 
 # install
-build "  Installing... " "make install" $_log
+build2 "make install" $_log
 
 # clean up
 cd ..

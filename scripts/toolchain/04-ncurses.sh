@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="ncurses"
-_version="5.9"
+_version="6.1"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -23,24 +23,25 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build "+ sh ../../sources/ncurses-5.9-20141206-patch.sh" "sh ../../sources/ncurses-5.9-20141206-patch.sh"  $_log
-build "+ patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" "patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" $_log
+#build2 "sh ../../sources/ncurses-5.9-20141206-patch.sh"  $_log
+build2 "patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" $_log
 #build "+ patch -Np1 -i ../../sources/ncurses-5.9-branch_update-4.patch" "patch -Np1 -i ../../sources/ncurses-5.9-branch_update-4.patch" $_log
-build "+ ./configure --prefix=$CROSS_TOOLS --without-debug --without-shared" "./configure --prefix=$CROSS_TOOLS --without-debug --without-shared" $_log
+build2 "./configure --prefix=$CROSS_TOOLS --without-debug --without-shared" $_log
 #build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
 
 # build
-build "+ make $MKFLAGS -C include" "make $MKFLAGS -C include" $_log
-build "+ make $MKFLAGS -C progs tic" "make $MKFLAGS -C progs tic" $_log
+build2 "make $MKFLAGS -C include" $_log
+build2 "make $MKFLAGS -C progs tic" $_log
 
 # install
-build "+ install -v -m755 progs/tic $CROSS_TOOLS/bin" "install -v -m755 progs/tic $CROSS_TOOLS/bin" $_log
+build2 "install -v -m755 progs/tic $CROSS_TOOLS/bin" $_log
 
 # clean up
 cd ..

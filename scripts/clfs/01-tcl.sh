@@ -7,13 +7,20 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="isl"
-_version="0.20"
+_package="tcl"
+_version="8.6.1"
 _sourcedir="$_package-$_version"
-_log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
-_completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
+_log="$LFS_TOP/$LOGDIR/$_prgname.log"
+_completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
-msg_line "Building $_package-$_version"
+_red="\\033[1;31m"
+_green="\\033[1;32m"
+_yellow="\\033[1;33m"
+_cyan="\\033[1;36m"
+_normal="\\033[0;39m"
+
+
+printf "${_green}==>${_normal} Building $_package-$_version"
 
 [ -e $_completed ] && {
 	msg ":  SKIPPING"
@@ -30,6 +37,10 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
+build2 "sed -i s/500/5000/ generic/regc_nfa.c" $_log
+build2 "cd unix" $_log
+build2 "CC=\"gcc ${BUILD64}\" ./configure --prefix=/tools --libdir=/tools/lib64" $_log
+
 build2 "./configure --prefix=$TOOLS \
     --build=${CLFS_HOST} --host=${CLFS_TARGET} \
     --libdir=$TOOLS/lib64" $_log
@@ -39,6 +50,9 @@ build2 "make $MKFLAGS" $_log
 
 # install
 build2 "make install" $_log
+build2 "make install-private-headers" $_log
+
+build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
 
 # clean up
 cd ..

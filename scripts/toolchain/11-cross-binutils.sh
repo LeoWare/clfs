@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="binutils"
-_version="2.24"
+_version="2.31.1"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -23,22 +23,24 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d binutils-build ] && rm -rf binutils-build
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build "+ mkdir -v ../binutils-build" "mkdir -v ../binutils-build" $_log
-build "+ cd ../binutils-build" "cd ../binutils-build" $_log
+build2 "mkdir -v ../binutils-build" $_log
+build2 "cd ../binutils-build" $_log
 
-build "+ AR=ar AS=as ../$_sourcedir/configure --prefix=$CROSS_TOOLS --host=$CLFS_HOST --target=$CLFS_TARGET --with-sysroot=$LFS --with-lib-path=/tools/lib:/tools/lib64 --disable-nls --disable-static --enable-64-bit-bfd --disable-werror" "AR=ar AS=as ../$_sourcedir/configure --prefix=$CROSS_TOOLS --host=$CLFS_HOST --target=$CLFS_TARGET --with-sysroot=$LFS --with-lib-path=/tools/lib:/tools/lib64 --disable-nls --disable-static --enable-64-bit-bfd --disable-werror" $_log
+build2 "AR=ar AS=as ../$_sourcedir/configure --prefix=$CROSS_TOOLS --host=$CLFS_HOST --target=$CLFS_TARGET --with-sysroot=$LFS --with-lib-path=/tools/lib32:/tools/lib64 --disable-nls --disable-static --enable-64-bit-bfd --disable-werror" $_log
 
 # build
-build "+ make $MKFLAGS" "make $MKFLAGS" $_log
+build2 "make $MKFLAGS" $_log
 
 # install
-build "+ make install" "make install" $_log
+build2 "make install" $_log
 
 # clean up
 cd ..
