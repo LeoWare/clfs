@@ -135,7 +135,7 @@ build2() {
 	else
 		printf "$_normal  $_cyan->$_normal %s: " "$_msg"
 		printf "\n  -> %s\n\n" "${_msg}" >> ${_logfile} 2>&1
-		eval ${_cmd} >> ${_logfile} 2>&1 && msg_success || msg_failure 
+		eval ${_cmd} >> ${_logfile} 2>&1  && msg_success || msg_failure 
 		fi
 	return 0
 }
