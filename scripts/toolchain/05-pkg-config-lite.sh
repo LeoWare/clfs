@@ -7,8 +7,8 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="file"
-_version="5.19"
+_package="pkg-config-lite"
+_version="0.28-1"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -20,6 +20,8 @@ msg_line "Building $_package-$_version"
 	exit 0
 }
 
+msg ""
+	
 # unpack sources
 unpack "${PWD}" "${_package}-${_version}"
 
@@ -27,13 +29,13 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+build "+ ./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" "./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" $_log
 
 # build
-build "  Making... " "make $MKFLAGS" $_log
+build "+ make $MKFLAGS" "make $MKFLAGS" $_log
 
 # install
-build "  Installing... " "make install" $_log
+build "+ make install" "make install" $_log
 
 # clean up
 cd ..
@@ -42,5 +44,5 @@ rm -rf $_sourcedir
 # make .completed file
 touch $_completed
 
-# exit sucessfully
+# exit sucessfull
 exit 0

@@ -23,9 +23,10 @@ check_environment() {
 	[ -z ${CROSS_TOOLS} ] && die "${PRGNAME}: CROSS_TOOLS not set: FAILURE"
 	[ -z ${HOST_TOP} ] && die "${PRGNAME}: HOST_TOP not set: FAILURE"
 	[ -z ${LFS_TOP} ] && die "${PRGNAME}: LFS_TOP not set: FAILURE"
-	[ -z ${HOST_TRIPLET} ] && die "${PRGNAME}: HOST_TRIPLET not set: FAILURE"
+	[ -z ${CLFS_HOST} ] && die "${PRGNAME}: CLFS_HOST not set: FAILURE"
+	[ -z ${CLFS_TARGET} ] && die "${PRGNAME}: CLFS_HOST not set: FAILURE"
+	[ -z ${CLFS_TARGET32} ] && die "${PRGNAME}: CLFS_HOST not set: FAILURE"
 	[ -z ${LFS_USER} ] && die "${PRGNAME}: LFS_USER not set: FAILURE"
-	[ -z ${LFS_TGT} ] && die "${PRGNAME}: LFS_TGT not set: FAILURE"
 	[ -z ${DEVICE} ] && die "${PRGNAME}: DEVICE not set: FAILURE"
 	[ -z ${BOOT_DEVICE} ] && die "${PRGNAME}: BOOT_DEVICE not set: FAILURE"
 	[ -z ${FILESYSTEM} ] && die "${PRGNAME}: FILESYSTEM not set: FAILURE"
@@ -120,20 +121,40 @@ build() {
 	return 0
 }
 
+build2() {
+	local _cyan="\\033[1;36m"
+	local _normal="\\033[0;39m"
+	# $1 = command
+	# $2 = log file
+	local _msg="${1}"
+	local _cmd="${1}"
+	local _logfile="${2}"
+	if [ "/dev/null" == "${_logfile}" ]; then
+		printf "$_normal  $_cyan->$_normal %s: " "$_msg"
+		eval ${_cmd} >> ${_logfile} 2>&1 && msg_success || msg_failure 
+	else
+		printf "$_normal  $_cyan->$_normal %s: " "$_msg"
+		printf "\n  -> %s\n\n" "${_msg}" >> ${_logfile} 2>&1
+		eval ${_cmd} >> ${_logfile} 2>&1 && msg_success || msg_failure 
+		fi
+	return 0
+}
+
 unpack() {
 	# $1 = directory
 	# $2 = source package name. I'll find the suffix thank you
-	local _dir=${1%%/BUILD*} # remove BUILD from path
+	local _dir=${1%%/$BUILDDIR*} # remove BUILD from path
 	local i=${2}
-	local p=$(echo ${_dir}/SOURCES/${i}*.tar.*)
-	msg_line "	Unpacking: ${i}: "
+	local p=$(echo ${_dir}/$SOURCESDIR/${i}*.tar.*)
+	msg_line "  Unpacking: ${i}: "
 	[ -e ${p} ] || die " File not found ${p}: FAILURE"
 	tar xf ${p} && msg_success || msg_failure
 	return 0
 }
 
 build_toolchain() {
-    su --login $LFS_USER <<- "EOF"
+    su --login $LFS_USER <<- EOF
+    	umask 002
 		cd ~
 		source ~/.bashrc
 		cd ${LFS}${LFS_TOP}

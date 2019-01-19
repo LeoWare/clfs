@@ -19,17 +19,20 @@ PRGNAME=${0##*/}	# script name minus the path
 #
 #msg "Building Chapter 5 Tool chain"
 [ "${LFS_USER}" != $(whoami) ] && die "Not lfs user: FAILURE"
-[ -z "${LFS_TGT}" ]  && die "Environment not set: FAILURE"
-[ ${PATH} = "/tools/bin:/bin:/usr/bin" ] || die "Path not set: FAILURE"
+[ -z "${CLFS_TARGET}" ]  && die "Environment not set: FAILURE"
 [ "${LFS}${LFS_TOP}" = $(pwd) ] && build "Changing to ${LFS}${LFS_TOP}" "cd ${LFS}${LFS_TOP}" "${LOGDIR}/toolchain.log"
 
 
 # execute all toolchanin scripts
-for script in `find $LFS_TOP/scripts/toolchain/ | sort`
+for script in `find $LFS$LFS_TOP/scripts/toolchain -type f | sort`
 do
-	# source the file to share the environment
-	source $script
+	cd $LFS$LFS_TOP/$BUILDDIR
+
+	# execute the file
+	TOPDIR=$LFS$LFS_TOP bash $script
+
 done
+
 exit 1
 touch "$LOGDIR/toolchain.completed"
 exit 0

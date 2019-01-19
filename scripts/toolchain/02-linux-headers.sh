@@ -7,8 +7,8 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="file"
-_version="5.19"
+_package="linux"
+_version="3.14"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -20,6 +20,8 @@ msg_line "Building $_package-$_version"
 	exit 0
 }
 
+msg ""
+	
 # unpack sources
 unpack "${PWD}" "${_package}-${_version}"
 
@@ -27,13 +29,15 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+build "+ xzcat $LFS$LFS_TOP/$SOURCESDIR/patch-3.14.21.xz | patch -Np1 -i -" "xzcat $LFS$LFS_TOP/$SOURCESDIR/patch-3.14.21.xz | patch -Np1 -i -" $_log
+#build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
 
 # build
-build "  Making... " "make $MKFLAGS" $_log
+build "+ make mrproper" "make mrproper" $_log
+build "+ make ARCH=x86_64 headers_check" "make ARCH=x86_64 headers_check" $_log
 
 # install
-build "  Installing... " "make install" $_log
+build "+ make ARCH=x86_64 INSTALL_HDR_PATH=${TOOLS} headers_install" "make ARCH=x86_64 INSTALL_HDR_PATH=${TOOLS} headers_install" $_log
 
 # clean up
 cd ..
@@ -42,5 +46,5 @@ rm -rf $_sourcedir
 # make .completed file
 touch $_completed
 
-# exit sucessfully
+# exit sucessfull
 exit 0

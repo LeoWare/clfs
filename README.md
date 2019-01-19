@@ -1,4 +1,4 @@
 # clfs
-Cross Linux from Scratch
+Cross-Compiled Linux from Scratch
 
 See the file `INSTALL.md` for build instructions.
