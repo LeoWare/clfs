@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="file"
-_version="5.19"
+_version="5.35"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -30,8 +30,11 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$TOOLS --libdir=$TOOLS/lib64 \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET}" $_log
+build2 "./configure \
+    --prefix=$TOOLS
+    --libdir=$TOOLS/lib64 \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET}" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

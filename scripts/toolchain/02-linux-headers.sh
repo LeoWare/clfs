@@ -30,8 +30,7 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-#build "+ xzcat $LFS$LFS_TOP/$SOURCESDIR/patch-3.14.21.xz | patch -Np1 -i -" "xzcat $LFS$LFS_TOP/$SOURCESDIR/patch-3.14.21.xz | patch -Np1 -i -" $_log
-#build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+#build2 "xzcat $LFS$LFS_TOP/$SOURCESDIR/patch-$_version.xz | patch -Np1 -i -" $_log
 
 # build
 build2 "make mrproper" $_log

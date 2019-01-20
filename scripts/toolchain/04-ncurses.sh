@@ -30,11 +30,9 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-#build2 "sh ../../sources/ncurses-5.9-20141206-patch.sh"  $_log
-build2 "patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" $_log
-#build "+ patch -Np1 -i ../../sources/ncurses-5.9-branch_update-4.patch" "patch -Np1 -i ../../sources/ncurses-5.9-branch_update-4.patch" $_log
-build2 "./configure --prefix=$CROSS_TOOLS --without-debug --without-shared" $_log
-#build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+build2 "./configure
+    --prefix=$CROSS_TOOLS \
+    --without-debug" $_log
 
 # build
 build2 "make $MKFLAGS -C include" $_log

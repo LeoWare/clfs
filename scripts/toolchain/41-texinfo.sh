@@ -30,8 +30,11 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "PERL=/usr/bin/perl ./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET}" $_log
+build2 "PERL=/usr/bin/perl \
+    ./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET}" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

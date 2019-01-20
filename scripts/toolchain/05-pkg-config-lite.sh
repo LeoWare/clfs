@@ -30,7 +30,10 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$CROSS_TOOLS --host=$CLFS_TARGET --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" $_log
+build2 "./configure \
+    --prefix=$CROSS_TOOLS \
+    --host=$CLFS_TARGET \
+    --with-pc-path=$TOOLS/lib64/pkgconfig:$TOOLS/share/pkgconfig" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

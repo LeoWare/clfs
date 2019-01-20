@@ -35,6 +35,9 @@ echo export RANLIB=\""${RANLIB}\"" >> ~/.bashrc
 echo export LD=\""${LD}\"" >> ~/.bashrc
 echo export STRIP=\""${STRIP}\"" >> ~/.bashrc
 
+# reload the file, or we'll have issues a few packages later...
+source ~/.bashrc
+
 # make .completed file
 touch $_completed
 

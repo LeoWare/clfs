@@ -30,7 +30,7 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "patch -Np1 -i ../../sources/bash-4.3-branch_update-5.patch" $_log
+#build2 "patch -Np1 -i ../../sources/bash-4.4-branch_update-1.patch" $_log
 
 cat > config.cache << "EOF"
 ac_cv_func_mmap_fixed_mapped=yes
@@ -48,8 +48,10 @@ gt_cv_int_divbyzero_sigfpe=yes
 EOF
 
 build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-    --without-bash-malloc --cache-file=config.cache" $_log
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --without-bash-malloc \
+    --cache-file=config.cache" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

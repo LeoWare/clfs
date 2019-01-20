@@ -1,5 +1,4 @@
 #!/bin/bash
-exit 0
 set -o errexit  # exit if error
 set -o nounset  # exit if variable not initalized
 set +h          # disable hashall
@@ -31,7 +30,10 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$CROSS_TOOLS --enable-cxx --disable-static" $_log
+build2 "./configure
+    --prefix=$CROSS_TOOLS
+    --enable-cxx
+    --disable-static" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

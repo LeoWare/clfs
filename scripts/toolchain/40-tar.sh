@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="tar"
-_version="1.27.1"
+_version="1.29"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -42,8 +42,10 @@ gl_cv_func_mbrtowc_retval=yes
 gl_cv_func_wcrtomb_retval=yes
 EOF
 
-build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
+build2 "./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
     --cache-file=config.cache" $_log
 
 # build

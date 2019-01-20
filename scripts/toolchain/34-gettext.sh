@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="gettext"
-_version="0.19.1"
+_version="0.19.8.1"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -31,15 +31,17 @@ cd $_sourcedir
 
 # prep
 build2 "cd gettext-tools" $_log
-build2 "echo \"gl_cv_func_wcwidth_works=yes\" > config.cache" $_log
 
-
-build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-    --disable-shared --cache-file=config.cache" $_log
+build2 "EMACS=\"no\" \
+    ./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --disable-shared" $_log
 
 # build
 build2 "make $MKFLAGS -C gnulib-lib" $_log
+build2 "make $MKFLAGS -C intl pluralx.c" $_log
 build2 "make $MKFLAGS -C src msgfmt msgmerge xgettext" $_log
 
 # install

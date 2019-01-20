@@ -30,9 +30,11 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "patch -Np1 -i ../../sources/mpfr-3.1.2-fixes-4.patch" $_log
-build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
+#build2 "patch -Np1 -i ../../sources/mpfr-3.1.2-fixes-4.patch" $_log
+build2 "./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
     --libdir=$TOOLS/lib64" $_log
 
 # build

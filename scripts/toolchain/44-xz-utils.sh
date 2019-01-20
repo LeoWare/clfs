@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="xz"
-_version="5.0.5"
+_version="5.2.3"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -30,8 +30,10 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
+build2 "./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
     --libdir=$TOOLS/lib64" $_log
 
 # build

@@ -30,7 +30,9 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$TOOLS --libdir=$TOOLS/lib64" $_log
+build2 "./configure \
+    --prefix=$TOOLS \
+    --libdir=$TOOLS/lib64" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

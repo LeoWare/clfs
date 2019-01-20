@@ -1,4 +1,5 @@
 #!/bin/bash
+exit 0
 set -o errexit  # exit if error
 set -o nounset  # exit if variable not initalized
 set +h          # disable hashall

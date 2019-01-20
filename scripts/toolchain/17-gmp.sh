@@ -30,9 +30,13 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "CC_FOR_BUILD=gcc ./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-    --libdir=$TOOLS/lib64 --enable-cxx" $_log
+build2 "CC_FOR_BUILD=gcc
+    ./configure \
+    --prefix=$TOOLS \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --libdir=$TOOLS/lib64 \
+    --enable-cxx" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

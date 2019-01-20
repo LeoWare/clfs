@@ -34,7 +34,20 @@ cd $_sourcedir
 build2 "mkdir -v ../binutils-build" $_log
 build2 "cd ../binutils-build" $_log
 
-build2 "AR=ar AS=as ../$_sourcedir/configure --prefix=$CROSS_TOOLS --host=$CLFS_HOST --target=$CLFS_TARGET --with-sysroot=$LFS --with-lib-path=/tools/lib32:/tools/lib64 --disable-nls --disable-static --enable-64-bit-bfd --disable-werror" $_log
+build2 "AR=ar AS=as \
+    ../$_sourcedir/configure \
+    --prefix=$CROSS_TOOLS \
+    --host=${CLFS_HOST} \
+    --target=${CLFS_TARGET} \
+    --with-sysroot=${CLFS} \
+    --with-lib-path=$TOOLS/lib:$TOOLS/lib64 \
+    --disable-nls \
+    --disable-static \
+    --enable-64-bit-bfd \
+    --enable-gold=yes \
+    --enable-plugins \
+    --enable-threads \
+    --disable-werror" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

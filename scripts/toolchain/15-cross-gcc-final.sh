@@ -29,44 +29,52 @@ unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
-unpack "${PWD}" "mpfr-4.0.1"
-unpack "${PWD}" "gmp-6.1.2"
-unpack "${PWD}" "mpc-1.1.0"
-mv -v mpfr-4.0.1 mpfr
-mv -v gmp-6.1.2 gmp
-mv -v mpc-1.1.0 mpc
+# unpack "${PWD}" "mpfr-4.0.1"
+# unpack "${PWD}" "gmp-6.1.2"
+# unpack "${PWD}" "mpc-1.1.0"
+# unpack "${PWD}" "isl-0.20"
+# mv -v mpfr-4.0.1 mpfr
+# mv -v gmp-6.1.2 gmp
+# mv -v mpc-1.1.0 mpc
+# mv -v isl-0.20 mpc
 
 # prep
-build2 "patch -Np1 -i ../../sources/${_package}-${_version}-tools-path.patch" $_log
+build2 "patch -Np1 -i ../../sources/${_package}-7.1.0-specs-1.patch" $_log
+build2 "patch -Np1 -i ../../sources/isl-includes.patch" $_log
+
+build2 "echo -en '\n#undef STANDARD_STARTFILE_PREFIX_1\n#define STANDARD_STARTFILE_PREFIX_1 \"/tools/lib/\"\n' >> gcc/config/linux.h" $_log
+build2 "echo -en '\n#undef STANDARD_STARTFILE_PREFIX_2\n#define STANDARD_STARTFILE_PREFIX_2 \"\"\n' >> gcc/config/linux.h" $_log
 
 build2 "mkdir -v ../gcc-build" $_log
 build2 "cd ../gcc-build" $_log
 
-ln -s /usr/bin/true makeinfo
-_oldPath=$PATH
-build2 "export PATH=\$(pwd):${PATH}" $_log
-
-#build2 "export LD_LIBRARY_PATH=/tools/lib64:/tools/lib32"
-build2 "AR=ar LDFLAGS=\"-Wl,-rpath,$CROSS_TOOLS/lib\" \
-    ../$_sourcedir/configure --prefix=$CROSS_TOOLS \
-    --build=$CLFS_HOST --host=$CLFS_HOST --target=$CLFS_TARGET \
-    --with-sysroot=$LFS --with-local-prefix=$TOOLS \
+build2 "AR=ar \
+    LDFLAGS=\"-Wl,-rpath,$CROSS_TOOLS/lib\" \
+    ../$_sourcedir/configure \
+    --prefix=$CROSS_TOOLS \
+    --build=${CLFS_HOST} \
+    --target=${CLFS_TARGET} \
+    --host=${CLFS_HOST} \
+    --with-sysroot=${CLFS} \
+    --with-local-prefix=$TOOLS \
     --with-native-system-header-dir=$TOOLS/include \
-    --disable-nls --disable-static --enable-languages=c,c++ \
-    --enable-__cxa_atexit --enable-threads=posix \
-    --with-system-zlib --enable-checking=release \
-    --enable-libstdcxx-time --disable-libgomp" $_log
+    --disable-static \
+    --enable-languages=c,c++ \
+    --with-mpc=$CROSS_TOOLS \
+    --with-mpfr=$CROSS_TOOLS \
+    --with-gmp=$CROSS_TOOLS \
+    --with-isl=$CROSS_TOOLS" $_log
 
 # build
 
-build2 "make $MKFLAGS AS_FOR_TARGET=\"${CLFS_TARGET}-as\" LD_FOR_TARGET=\"${CLFS_TARGET}-ld\"" $_log
+build2 "make $MKFLAGS \
+    AS_FOR_TARGET=\"${CLFS_TARGET}-as\" \
+    LD_FOR_TARGET=\"${CLFS_TARGET}-ld\"" $_log
 
 # install
 build2 "make install" $_log
 
 # clean up
-export PATH=$_oldPath
-unset _oldPath
 cd ..
 rm -rf gcc-build
 rm -rf $_sourcedir

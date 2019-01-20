@@ -30,8 +30,8 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure --prefix=$CROSS_TOOLS" $_log
-#build "  Configuring... " "./configure --prefix=/cross-tools --disable-static" $_log
+build2 "./configure \
+    --prefix=$CROSS_TOOLS" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

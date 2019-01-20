@@ -36,13 +36,21 @@ build2 "mkdir -v ../binutils-build" $_log
 build2 "cd ../binutils-build" $_log
 
 build2 "../$_sourcedir/configure \
-    --prefix=$TOOLS --libdir=$TOOLS/lib64 --with-lib-path=$TOOLS/lib64:$TOOLS/lib \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} --target=${CLFS_TARGET} \
-    --disable-nls --enable-shared --enable-64-bit-bfd" $_log
+    --prefix=$TOOLS \
+    --libdir=$TOOLS/lib64 \
+    --with-lib-path=$TOOLS/lib64:$TOOLS/lib \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --target=${CLFS_TARGET} \
+    --disable-nls \
+    --enable-shared \
+    --enable-64-bit-bfd \
+    --enable-gold=yes \
+    --enable-plugins \
+    --with-system-zlib \
+    --enable-threads" $_log
 
 # build
-#build2 "export CFLAGS=\"-Wno-error=unused-value\"" $_log
-#build2 "CFLAGS=\"-Wno-error=unused-value\" make $MKFLAGS" $_log
 build2 "make $MKFLAGS" $_log
 
 # install

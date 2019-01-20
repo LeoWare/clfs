@@ -23,29 +23,29 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
+[ -d glibc-build ] && rm -rf glibc-build
+[ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cp -v timezone/Makefile{,.orig}" $_log
-build2 "sed 's/\\\\$\$(pwd)/\`pwd\`/' timezone/Makefile.orig > timezone/Makefile" $_log
-
 build2 "mkdir -v ../glibc-build" $_log
 build2 "cd ../glibc-build" $_log
 
-build2 "echo \"libc_cv_ssp=no\" > config.cache" $_log
-build2 "echo \"slibdir=/tools/lib32\" >> configparms" $_log
-
-build2 "BUILD_CC=\"gcc\" CC=\"${CLFS_TARGET}-gcc ${BUILD32}\" \
-    AR=\"${CLFS_TARGET}-ar\" RANLIB=\"${CLFS_TARGET}-ranlib\" \
-    ../$_sourcedir/configure --prefix=$TOOLS \
-    --host=${CLFS_TARGET32} --build=${CLFS_HOST} --libdir=$TOOLS/lib32 \
-    --disable-profile --enable-kernel=3.2 \
-    --with-binutils=$CROSS_TOOLS/bin --with-headers=$TOOLS/include \
-    --enable-obsolete-rpc libc_cv_forced_unwind=yes          \
-    libc_cv_c_cleanup=yes --cache-file=config.cache" $_log
+build2 "BUILD_CC=\"gcc\" \
+    CC=\"${CLFS_TARGET}-gcc ${BUILD32}\" \
+    AR=\"${CLFS_TARGET}-ar\" \
+    RANLIB=\"${CLFS_TARGET}-ranlib\" \
+    ../$_package-$_version/configure \
+    --prefix=$TOOLS \
+    --host=${CLFS_TARGET32} \
+    --build=${CLFS_HOST} \
+    --enable-kernel=3.12.0 \
+    --with-binutils=$CROSS_TOOLS/bin \
+    --with-headers=$TOOLS/include \
+    --enable-obsolete-rpc" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

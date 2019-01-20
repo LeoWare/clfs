@@ -31,7 +31,8 @@ cd $_sourcedir
 
 # prep
 build2 "cp -v Makefile{,.orig}" $_log
-build2 "sed -e 's@^\(all:.*\) test@\1@g' -e 's@/lib\(/\| \|$\)@/lib64\1@g' Makefile.orig > Makefile" $_log
+build2 "sed -e 's@^\(all:.*\) test@\1@g' \
+    -e 's@/lib\(/\| \|$\)@/lib64\1@g' Makefile.orig > Makefile" $_log
 
 # build
 build2 "make $MKFLAGS CC=\"${CC}\" AR=\"${AR}\" RANLIB=\"${RANLIB}\"" $_log

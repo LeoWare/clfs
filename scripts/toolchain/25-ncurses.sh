@@ -30,13 +30,18 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "sh ../../sources/ncurses-5.9-20141206-patch.sh" $_log
-build2 "patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" $_log
-build2 "./configure --prefix=$TOOLS --with-shared \
-   --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-   --without-debug --without-ada \
-   --enable-overwrite --with-build-cc=gcc \
-   --libdir=$TOOLS/lib64" $_log
+#build2 "sh ../../sources/ncurses-5.9-20141206-patch.sh" $_log
+#build2 "patch -Np1 -i ../../sources/ncurses-5.9-bash_fix-1.patch" $_log
+build2 "./configure \
+    --prefix=$TOOLS \
+    --with-shared \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --without-debug \
+    --without-ada \
+    --enable-overwrite \
+    --with-build-cc=gcc \
+    --libdir=$TOOLS/lib64" $_log
 
 # build
 build2 "make $MKFLAGS" $_log

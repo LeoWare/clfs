@@ -31,7 +31,10 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "echo -en '\n#undef STANDARD_STARTFILE_PREFIX_1\n#define STANDARD_STARTFILE_PREFIX_1 \"$TOOLS/lib/\"\n' >> gcc/config/linux.h" $_log
+build2 "patch -Np1 -i ../../sources/${_package}-7.1.0-specs-1.patch" $_log
+build2 "patch -Np1 -i ../../sources/isl-includes.patch" $_log
+
+build2 "echo -en '\n#undef STANDARD_STARTFILE_PREFIX_1\n#define STANDARD_STARTFILE_PREFIX_1 \"/tools/lib/\"\n' >> gcc/config/linux.h" $_log
 build2 "echo -en '\n#undef STANDARD_STARTFILE_PREFIX_2\n#define STANDARD_STARTFILE_PREFIX_2 \"\"\n' >> gcc/config/linux.h" $_log
 
 build2 "cp -v gcc/Makefile.in{,.orig}" $_log
@@ -44,23 +47,25 @@ ln -s /usr/bin/true makeinfo
 _oldPath=$PATH
 build2 "export PATH=\$(pwd):${PATH}" $_log
 
-build2 "../$_sourcedir/configure --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64 --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-    --target=${CLFS_TARGET} --with-local-prefix=$TOOLS --disable-nls \
-    --enable-languages=c,c++ --disable-libstdcxx-pch \
-    --with-system-zlib --with-native-system-header-dir=$TOOLS/include \
-    --disable-libssp --enable-libstdcxx-time --enable-checking=release" $_log
-
-build2 "cp -v Makefile{,.orig}" $_log
-build2 "sed \"/^HOST_\(GMP\|ISL\|CLOOG\)\(LIBS\|INC\)/s:$TOOLS:/$CROSS_TOOLS:g\" Makefile.orig > Makefile" $_log
+build2 "../$_sourcedir/configure \
+    --prefix=$TOOLS \
+    --libdir=$TOOLS/lib64 \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --target=${CLFS_TARGET} \
+    --with-local-prefix=/tools \
+    --enable-languages=c,c++ \
+    --with-system-zlib \
+    --with-native-system-header-dir=$TOOLS/include \
+    --disable-libssp \
+    --enable-install-libiberty" $_log
 
 # build
-build2 "make $MKFLAGS AS_FOR_TARGET=\"${AS}\" LD_FOR_TARGET=\"${LD}\"" $_log
+build2 "make $MKFLAGS AS_FOR_TARGET=\"${AS}\" \
+    LD_FOR_TARGET=\"${LD}\"" $_log
 
 # install
 build2 "make install" $_log
-
-build2 "cp -v ../$_sourcedir/include/libiberty.h $TOOLS/include" $_log
 
 # clean up
 export PATH=$_oldPath

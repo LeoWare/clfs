@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="coreutils"
-_version="8.22"
+_version="8.30"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -30,15 +30,19 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-cat > config.cache << EOF
-fu_cv_sys_stat_statfs2_bsize=yes
-gl_cv_func_working_mkstemp=yes
-EOF
+#cat > config.cache << EOF
+#fu_cv_sys_stat_statfs2_bsize=yes
+#gl_cv_func_working_mkstemp=yes
+#EOF
 
-build2 "patch -Np1 -i ../../sources/coreutils-8.22-noman-1.patch" $_log
-build2 "./configure --prefix=$TOOLS \
-    --build=${CLFS_HOST} --host=${CLFS_TARGET} \
-    --enable-install-program=hostname --cache-file=config.cache" $_log
+build2 "./configure \
+    --prefix=/tools \
+    --build=${CLFS_HOST} \
+    --host=${CLFS_TARGET} \
+    --enable-install-program=hostname \
+    --cache-file=config.cache" $_log
+
+build2 "sed -i -e 's/^man1_MANS/#man1_MANS/' Makefile" $_log
 
 # build
 build2 "make $MKFLAGS" $_log
