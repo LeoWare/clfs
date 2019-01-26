@@ -23,20 +23,27 @@ PRGNAME=${0##*/}	# script name minus the path
 [ "${LFS}${LFS_TOP}" = $(pwd) ] && build "Changing to ${LFS}${LFS_TOP}" "cd ${LFS}${LFS_TOP}" "${LOGDIR}/toolchain.log"
 
 
-# execute all toolchain scripts
-for script in `find $LFS$LFS_TOP/scripts/toolchain -type f | sort`
+# execute all efi scripts
+for script in `find $LFS$LFS_TOP/scripts/efi -type f | sort`
 do
 	cd $LFS$LFS_TOP/$BUILDDIR
-
-	# TODO: build a check so we're not sourcing it every time. doesn't hurt anything, though
-	# if script is 16-build-variables,
-	# reload ~/.bashrc
-	source ~/.bashrc
 
 	# execute the file
 	TOPDIR=$LFS$LFS_TOP bash $script
 
 done
 
-touch "$LFS$LFS_TOP/$LOGDIR/toolchain.completed"
+# execute all bootfiles scripts
+for script in `find $LFS$LFS_TOP/scripts/boot -type f | sort`
+do
+	cd $LFS$LFS_TOP/$BUILDDIR
+
+	# execute the file
+	TOPDIR=$LFS$LFS_TOP bash $script
+
+done
+
+
+
+touch "$LFS$LFS_TOP/$LOGDIR/bootfiles.completed"
 exit 0

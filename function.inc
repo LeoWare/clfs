@@ -104,6 +104,8 @@ end_run() {
 }
 
 build() {
+    local _cyan="\\033[1;36m"
+    local _normal="\\033[0;39m"
     # $1 = message 
     # $2 = command
     # $3 = log file
@@ -111,11 +113,11 @@ build() {
     local _cmd="${2}"
     local _logfile="${3}"
     if [ "/dev/null" == "${_logfile}" ]; then
-        msg_line "${_msg}: "
+        printf "$_normal  $_cyan->$_normal %s: " "$_msg"
         eval ${_cmd} >> ${_logfile} 2>&1 && msg_success || msg_failure 
     else
-        msg_line "${_msg}: "
-        printf "\n%s\n\n" "###       ${_msg}       ###" >> ${_logfile} 2>&1
+        printf "$_normal  $_cyan->$_normal %s: " "$_msg"
+        printf "\n  -> %s\n\n" "${_msg}" >> ${_logfile} 2>&1
         eval ${_cmd} >> ${_logfile} 2>&1 && msg_success || msg_failure 
         fi
     return 0
@@ -164,33 +166,45 @@ EOF
     return 0
 }
 
+build_bootfiles() {
+    su --login $LFS_USER <<- EOF
+        umask 002
+        cd ~
+        source ~/.bashrc
+        cd ${LFS}${LFS_TOP}
+        pwd
+        ./bootfiles.sh
+EOF
+    return 0
+}
+
 # this function is called in the host context
 build_filesystem() {
     local _logfile="${LOGDIR}/filesystem.log"
-    mkdir -pv $LFS/{dev,proc,run/{,shm},sys}
-    mkdir -pv $LFS/{bin,boot,etc/{opt,sysconfig},home,lib{,32,64},lib/firmware,mnt,opt}
-    mkdir -pv $LFS/{media/{floppy,cdrom},sbin,srv,var}
-    install -dv -m 0750 $LFS/root
-    install -dv -m 1777 $LFS/tmp $LFS/var/tmp
-    mkdir -pv $LFS/usr/{,local/}{bin,include,lib{,32,64},sbin,src}
-    mkdir -pv $LFS/usr/{,local/}share/{color,dict,doc,info,locale,man}
-    mkdir -v  $LFS/usr/{,local/}share/{misc,terminfo,zoneinfo}
-    mkdir -v  $LFS/usr/libexec
-    mkdir -pv $LFS/usr/{,local/}share/man/man{1..8}
-
-    mkdir -pv $LFS/var/{log,mail,spool}
-    ln -sv /run $LFS/var/run
-    ln -sv /run/lock $LFS/var/lock
-    mkdir -pv $LFS/var/{opt,cache,lib/{color,misc,locate},local}
+    mkdir -pv ${LFS}/{bin,boot,dev,{etc/,}opt,home,lib{,64},mnt}
+    mkdir -pv ${LFS}/{proc,media/{floppy,cdrom},run/{,shm},sbin,srv,sys}
+    mkdir -pv ${LFS}/var/{lock,log,mail,spool}
+    mkdir -pv ${LFS}/var/{opt,cache,lib{,64}/{misc,locate},local}
+    install -dv ${LFS}/root -m 0750
+    install -dv ${LFS}{/var,}/tmp -m 1777
+    ln -sv ../run ${LFS}/var/run
+    mkdir -pv ${LFS}/usr/{,local/}{bin,include,lib{,64},sbin,src}
+    mkdir -pv ${LFS}/usr/{,local/}share/{doc,info,locale,man}
+    mkdir -pv ${LFS}/usr/{,local/}share/{misc,terminfo,zoneinfo}
+    mkdir -pv ${LFS}/usr/{,local/}share/man/man{1..8}
+    install -dv ${LFS}/usr/lib/locale
+    ln -sv ../lib/locale ${LFS}/usr/lib64
+    mkdir -pv ${LFS}/usr/local/games
+    mkdir -pv ${LFS}/usr/share/games
 
     [ -e ${LFS}/dev/console ]   || build "mknod -m 600 ${LFS}/dev/console c 5 1" "mknod -m 600 ${LFS}/dev/console c 5 1" "${_logfile}"
     [ -e ${LFS}/dev/null ]      || build "mknod -m 666 ${LFS}/dev/null c 1 3" "mknod -m 666 ${LFS}/dev/null c 1 3" "${_logfile}"
 
     ln -sv /tools/bin/{bash,cat,echo,grep,pwd,stty} ${LFS}/bin
     ln -sv /tools/bin/file ${LFS}/usr/bin
-    ln -sv /tools/lib/libgcc_s.so{,.1} ${LFS}/usr/lib32
+    ln -sv /tools/lib/libgcc_s.so{,.1} ${LFS}/usr/lib
     ln -sv /tools/lib64/libgcc_s.so{,.1} ${LFS}/usr/lib64
-    ln -sv /tools/lib/libstd* ${LFS}/usr/lib32
+    ln -sv /tools/lib/libstd* ${LFS}/usr/lib
     ln -sv /tools/lib64/libstd* ${LFS}/usr/lib64
     ln -sv bash ${LFS}/bin/sh
 
@@ -281,10 +295,10 @@ umount_kernel_vfs() {
 build_shell() {
     chroot "${LFS}" /tools/bin/env -i \
         HOME=/root TERM="$TERM" PS1='(LFS chroot) \u:\w\$ ' \
-        PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin \
+        PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:/cross-tools/bin:/cross-tools/sbin \
         LFS_TOP="${LFS_TOP}" \
         BUILDLOG="${LOGFILE}" \
-        /tools/bin/bash --login +h "cd ${LFS_TOP};./build-shell.sh"
+        /tools/bin/bash --login +h -c "cd ${LFS_TOP} && pwd && $LFS_TOP/build-shell.sh"
         return 0
 }
 

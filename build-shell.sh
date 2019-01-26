@@ -28,6 +28,10 @@ for script in `find $LFS_TOP/scripts/clfs -type f | sort`
 do
     cd $LFS_TOP/$BUILDDIR
 
+	# TODO: build a check so we're not sourcing it every time. doesn't hurt anything, though
+	# reload ~.bash_profile
+	source ~/.bash_profile
+
     # execute the file
     TOPDIR=$LFS_TOP bash $script
 
