@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="tcl"
-_version="8.6.4"
-_sourcedir="$_package$_version"
+_package="coreutils"
+_version="8.27"
+_sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -31,26 +31,32 @@ msg ""
 	
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
-unpack "${PWD}" "${_package}-core${_version}-src"
+unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cd unix" $_log
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64" $_log
+build2 "patch -Np1 -i ../../sources/coreutils-8.27-uname-1.patch" $_log
+build2 "FORCE_UNSAFE_CONFIGURE=1 \
+CC=\"gcc ${BUILD64}\" \
+./configure \
+    --prefix=/usr \
+    --enable-no-install-program=kill,uptime \
+    --enable-install-program=hostname" $_log
 
 # build
-build2 "make $MKFLAGS" $_log
+build2 "make" $_log
+
+#build2 "make -k check" $_log
 
 # install
 build2 "make install" $_log
-build2 "make install-private-headers" $_log
 
-build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
+build2 "mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date} /bin" $_log
+build2 "mv -v /usr/bin/{dd,df,echo,false,hostname,ln,ls,mkdir,mknod} /bin" $_log
+build2 "mv -v /usr/bin/{mv,pwd,rm,rmdir,stty,true,uname} /bin" $_log
+build2 "mv -v /usr/bin/chroot /usr/sbin" $_log
 
 # clean up
 cd ..

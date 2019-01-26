@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
 _package="glibc"
-_version="2.28"
+_version="2.25"
 _sourcedir="$_package-$_version"
 _log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"

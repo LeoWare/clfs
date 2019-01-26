@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="tcl"
-_version="8.6.4"
-_sourcedir="$_package$_version"
+_package="attr"
+_version="2.4.47"
+_sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -31,26 +31,35 @@ msg ""
 	
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
-unpack "${PWD}" "${_package}-core${_version}-src"
+unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cd unix" $_log
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64" $_log
+build2 "sed -i -e \"/SUBDIRS/s|man[25]||g\" man/Makefile" $_log
+build2 "sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in" $_log
+
+build2 "CC=\"gcc ${BUILD32}\" \
+./configure \
+    --prefix=/usr \
+    --libdir=/lib \
+    --libexecdir=/usr/lib" $_log
 
 # build
-build2 "make $MKFLAGS" $_log
+build2 "make" $_log
+
+#build2 "make -j1 tests root-tests" $_log
 
 # install
 build2 "make install" $_log
-build2 "make install-private-headers" $_log
+build2 "make install-dev" $_log
+build2 "make install-lib" $_log
 
-build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
+build2 "ln -sfv ../../lib/\$(readlink /lib/libattr.so) /usr/lib/libattr.so" $_log
+build2 "rm -v /lib/libattr.so" $_log
+
+build2 "chmod 755 -v /lib/libattr.so.1.1.0" $_log
 
 # clean up
 cd ..

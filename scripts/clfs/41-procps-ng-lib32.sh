@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="tcl"
-_version="8.6.4"
-_sourcedir="$_package$_version"
+_package="procps-ng"
+_version="3.3.12"
+_sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -31,26 +31,29 @@ msg ""
 	
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
-unpack "${PWD}" "${_package}-core${_version}-src"
+unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cd unix" $_log
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64" $_log
+build2 "CC=\"gcc ${BUILD32}\" ./configure \
+    --prefix=/usr \
+    --exec-prefix= \
+    --libdir=/usr/lib \
+    --docdir=/usr/share/doc/$_package-$_version \
+    --disable-kill" $_log
 
 # build
-build2 "make $MKFLAGS" $_log
+build2 "make" $_log
+
+#build2 "make -k check" $_log
 
 # install
 build2 "make install" $_log
-build2 "make install-private-headers" $_log
 
-build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
+build2 "mv -v /usr/lib/libprocps.so.* /lib" $_log
+build2 "ln -sfv ../../lib/\$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so" $_log
 
 # clean up
 cd ..

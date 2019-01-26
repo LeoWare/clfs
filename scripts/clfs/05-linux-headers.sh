@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="tcl"
-_version="8.6.4"
-_sourcedir="$_package$_version"
+_package="linux"
+_version="4.15.3"
+_sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -31,26 +31,21 @@ msg ""
 	
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
-unpack "${PWD}" "${_package}-core${_version}-src"
+unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cd unix" $_log
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64" $_log
 
 # build
-build2 "make $MKFLAGS" $_log
+build2 "make mrproper" $_log
+build2 "make headers_check" $_log
 
 # install
-build2 "make install" $_log
-build2 "make install-private-headers" $_log
+build2 "make INSTALL_HDR_PATH=/usr headers_install" $_log
 
-build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
+build2 "find /usr/include -name .install -or -name ..install.cmd | xargs rm -fv" $_log
 
 # clean up
 cd ..

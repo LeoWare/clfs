@@ -49,6 +49,9 @@ build2 "make $MKFLAGS" $_log
 # install
 build2 "make install" $_log
 
+build2 "ln -sfv libncurses.so.6 $TOOLS/lib64/libncursesw.so" $_log
+build2 "ln -sfv libncurses.so.6.1 $TOOLS/lib64/libncursesw.so.6" $_log
+
 # clean up
 cd ..
 rm -rf $_sourcedir

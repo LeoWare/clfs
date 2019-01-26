@@ -7,13 +7,20 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="glibc"
-_version="2.25"
+_package="tcl"
+_version="8.6.4"
 _sourcedir="$_package-$_version"
-_log="$LFS$LFS_TOP/$LOGDIR/$_prgname.log"
-_completed="$LFS$LFS_TOP/$LOGDIR/$_prgname.completed"
+_log="$LFS_TOP/$LOGDIR/$_prgname.log"
+_completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
-msg_line "Building $_package-$_version"
+_red="\\033[1;31m"
+_green="\\033[1;32m"
+_yellow="\\033[1;33m"
+_cyan="\\033[1;36m"
+_normal="\\033[0;39m"
+
+
+printf "${_green}==>${_normal} Building $_package-$_version"
 
 [ -e $_completed ] && {
 	msg ":  SKIPPING"
@@ -23,7 +30,6 @@ msg_line "Building $_package-$_version"
 msg ""
 	
 # unpack sources
-[ -d glibc-build ] && rm -rf glibc-build
 [ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
 
@@ -31,31 +37,23 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "mkdir -v ../glibc-build" $_log
-build2 "cd ../glibc-build" $_log
-
-build2 "BUILD_CC=\"gcc\" \
-    CC=\"${CLFS_TARGET}-gcc ${BUILD32}\" \
-    AR=\"${CLFS_TARGET}-ar\" \
-    RANLIB=\"${CLFS_TARGET}-ranlib\" \
-    ../$_package-$_version/configure \
+build2 "cd unix" $_log
+build2 "CC=\"gcc ${BUILD64}\" \
+    ./configure \
     --prefix=$TOOLS \
-    --host=${CLFS_TARGET32} \
-    --build=${CLFS_HOST} \
-    --enable-kernel=3.12.0 \
-    --with-binutils=$CROSS_TOOLS/bin \
-    --with-headers=$TOOLS/include \
-    --enable-obsolete-rpc" $_log
+    --libdir=$TOOLS/lib64" $_log
 
 # build
 build2 "make $MKFLAGS" $_log
 
 # install
 build2 "make install" $_log
+build2 "make install-private-headers" $_log
+
+build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
 
 # clean up
 cd ..
-rm -rf glibc-build
 rm -rf $_sourcedir
 
 # make .completed file

@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}	# script name minus the path
 
-_package="tcl"
-_version="8.6.4"
-_sourcedir="$_package$_version"
+_package="pkg-config-lite"
+_version="0.28-1"
+_sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -31,26 +31,32 @@ msg ""
 	
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
-unpack "${PWD}" "${_package}-core${_version}-src"
+unpack "${PWD}" "${_package}-${_version}"
 
 # cd to source dir
 cd $_sourcedir
 
 # prep
-build2 "cd unix" $_log
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=$TOOLS \
-    --libdir=$TOOLS/lib64" $_log
+build2 "CC=\"gcc ${BUILD64}\" ./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/$_package-$_version \
+    --with-pc-path=/usr/share/pkgconfig" $_log
 
 # build
-build2 "make $MKFLAGS" $_log
+build2 "make" $_log
+
+#build2 "make -k check" $_log
 
 # install
 build2 "make install" $_log
-build2 "make install-private-headers" $_log
 
-build2 "ln -sv tclsh8.6 /tools/bin/tclsh" $_log
+export PKG_CONFIG_PATH32="/usr/lib/pkgconfig"
+export PKG_CONFIG_PATH64="/usr/lib64/pkgconfig"
+
+cat >> /root/.bash_profile << EOF
+export PKG_CONFIG_PATH32="${PKG_CONFIG_PATH32}"
+export PKG_CONFIG_PATH64="${PKG_CONFIG_PATH64}"
+EOF
 
 # clean up
 cd ..
