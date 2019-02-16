@@ -5,10 +5,10 @@ set +h          # disable hashall
 
 source $TOPDIR/config.inc
 source $TOPDIR/function.inc
-_prgname=${0##*/}	# script name minus the path
+_prgname=${0##*/}   # script name minus the path
 
-_package="iana-etc"
-_version="2.30"
+_package="libpipeline"
+_version="1.4.1"
 _sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -23,12 +23,12 @@ _normal="\\033[0;39m"
 printf "${_green}==>${_normal} Building $_package-$_version"
 
 [ -e $_completed ] && {
-	msg ":  ${_yellow}SKIPPING${_normal}"
-	exit 0
+    msg ":  ${_yellow}SKIPPING${_normal}"
+    exit 0
 }
 
 msg ""
-	
+
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
@@ -37,12 +37,14 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "xzcat ../../sources/iana-etc-2.30-numbers_update-20140202-2.patch.xz | patch -Np1 -i -" $_log
+build2 "CC=\"gcc ${BUILD32}\" \
+    ./configure \
+    --prefix=/usr" $_log
 
 # build
 build2 "make" $_log
 
-#build2 "make -k check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

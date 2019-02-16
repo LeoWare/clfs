@@ -10,6 +10,7 @@ update-scripts:
 	cp -aurv /home/samuel/src/clfs/bootfiles.sh /mnt/clfs/usr/src/clfs/
 	cp -aurv /home/samuel/src/clfs/toolchain.sh /mnt/clfs/usr/src/clfs/
 	cp -aurv /home/samuel/src/clfs/Makefile /mnt/clfs/usr/src/clfs/
+	cp -aurv /home/samuel/src/clfs/sources/* /mnt/clfs/usr/src/clfs/sources/
 
 build: logs/build.completed
 	./build-clfs
