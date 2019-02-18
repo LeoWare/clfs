@@ -37,14 +37,14 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "patch -Np1 -i ../intltool-0.51.0-perl-5.22-compatibility.patch" $_log
+build2 "patch -Np1 -i ../../sources/intltool-0.51.0-perl-5.22-compatibility.patch" $_log
 build2 "./configure \
     --prefix=/usr" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

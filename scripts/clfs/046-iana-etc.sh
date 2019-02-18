@@ -40,7 +40,7 @@ cd $_sourcedir
 build2 "xzcat ../../sources/iana-etc-2.30-numbers_update-20140202-2.patch.xz | patch -Np1 -i -" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make -k check" $_log
 

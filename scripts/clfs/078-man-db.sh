@@ -52,9 +52,9 @@ build2 "PKG_CONFIG_PATH=\"${PKG_CONFIG_PATH64}\" \
     --with-grap=/usr/bin/grap" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

@@ -44,7 +44,7 @@ build2 "PKG_CONFIG_PATH=/tools/lib64/pkgconfig \
     --libdir=/usr/lib64" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 build2 "make check" $_log
 

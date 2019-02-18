@@ -41,7 +41,7 @@ build2 "CC=\"gcc ${BUILD64}\" ./configure \
     --prefix=/usr" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 build2 "make check" $_log
 # install

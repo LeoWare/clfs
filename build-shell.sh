@@ -23,11 +23,12 @@ PRGNAME=${0##*/}    # script name minus the path
 [ "${LFS_TOP}" = $(pwd) ] && build "Changing to ${LFS_TOP}" "cd ${LFS_TOP}" "${LOGDIR}/build-shell.log"
 
 
-# execute all toolchanin scripts
+# execute all build scripts in the directory
 for script in `find $LFS_TOP/scripts/clfs -type f | sort`
 do
     cd $LFS_TOP/$BUILDDIR
 
+    export MAKEFLAGS="$MKFLAGS"
 	# TODO: build a check so we're not sourcing it every time. doesn't hurt anything, though
 	# reload ~.bash_profile
 	source ~/.bash_profile
@@ -35,6 +36,8 @@ do
     # execute the file
     TOPDIR=$LFS_TOP bash $script
 
+    # delete any libtool archives
+    find /{,usr/}lib{,64} -name "*.la" \( -print -delete \)
 done
 
 exit 1

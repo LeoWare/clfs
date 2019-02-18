@@ -7,9 +7,9 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}   # script name minus the path
 
-_package="bc"
-_version="1.07.1"
-_sourcedir="$_package-$_version"
+_package="openssl"
+_version="1.1.0g"
+_sourcedir="${_package}-${_version}"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
@@ -28,7 +28,7 @@ printf "${_green}==>${_normal} Building $_package-$_version"
 }
 
 msg ""
-    
+
 # unpack sources
 [ -d $_sourcedir ] && rm -rf $_sourcedir
 unpack "${PWD}" "${_package}-${_version}"
@@ -37,31 +37,43 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-cat > bc/fix-libmath_h << "EOF"
-#! /bin/bash
-sed -e '1   s/^/{"/' \
-    -e     's/$/",/' \
-    -e '2,$ s/^/"/'  \
-    -e   '$ d'       \
-    -i libmath.h
-
-sed -e '$ s/$/0}/' \
--i libmath.h
-EOF
-
-build2 "CC=\"gcc ${BUILD64}\" \
-./configure \
+build2 "./config \
     --prefix=/usr \
-    --mandir=/usr/share/man \
-    --infodir=/usr/share/info" $_log
+    --docdir=/usr/share/doc/${_package}-${_version} \
+    zlib-dynamic \
+    shared \
+    --libdir=lib64 \
+    --openssldir=/etc/ssl" $_log
 
 # build
 build2 "make $MKFLAGS" $_log
 
-#build2 "echo \"quit\" | ./bc/bc -l Test/checklib.b" $_log
+#build2 "make test" $_log
 
 # install
-build2 "make install" $_log
+build2 "sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile" $_log
+build2 "make MANSUFFIX=ssl install" $_log
+build2 "mv -v /usr/share/doc/openssl /usr/share/doc/openssl-1.1.0g" $_log
+build2 "cp -vfr doc/* /usr/share/doc/openssl-1.1.0g" $_log
+
+build2 "ln -sv vim /usr/bin/vi" $_log
+
+build2 "ln -sv ../vim/vim0597/doc /usr/share/doc/vim-8.0" $_log
+
+# configuration
+cat > /etc/vimrc << "EOF"
+" Begin /etc/vimrc
+
+set nocompatible
+set backspace=2
+set ruler
+syntax on
+if (&term == "iterm") || (&term == "putty")
+  set background=dark
+endif
+
+" End /etc/vimrc
+EOF
 
 # clean up
 cd ..

@@ -43,9 +43,9 @@ build2 "CC=\"gcc ${BUILD64}\" \
     --bindir=/bin" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make PERL=perl-64 check" $_log
+#build2 "make PERL=perl-64 check" $_log
 
 # install
 build2 "make install" $_log

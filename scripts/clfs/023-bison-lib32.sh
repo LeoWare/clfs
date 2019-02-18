@@ -43,7 +43,7 @@ build2 "CC=\"gcc ${BUILD32}\" CXX=\"g++ ${BUILD32}\" \
     --docdir=/usr/share/doc/$_package-$_version" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 

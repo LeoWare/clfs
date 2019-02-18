@@ -30,7 +30,7 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure
+build2 "./configure \
     --prefix=$CROSS_TOOLS \
     --without-debug" $_log
 

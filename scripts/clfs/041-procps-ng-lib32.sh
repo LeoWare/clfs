@@ -45,7 +45,7 @@ build2 "CC=\"gcc ${BUILD32}\" ./configure \
     --disable-kill" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make -k check" $_log
 

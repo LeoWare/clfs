@@ -46,20 +46,36 @@ XSLTPROC="/usr/bin/xsltproc"
 cc_cv_LDFLAGS__Wl__fuse_ld_gold=no
 EOF
 
-build2 "CC=\"gcc ${BUILD64}\" \
-    ./configure \
-    --prefix=/usr" $_log
+build2 "CC=\"gcc ${BUILD32}\" PKG_CONFIG_PATH=\"${PKG_CONFIG_PATH32}\" \
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --libexecdir=/usr/lib \
+    --disable-tests       \
+    --docdir=/usr/share/doc/systemd-233 \
+    --with-rootprefix="" \
+    --with-rootlibdir=/lib \
+    --enable-split-usr \
+    --disable-firstboot \
+    --disable-ldconfig \
+    --disable-lto \
+    --disable-sysusers \
+    --with-default-dnssec=no \
+    --with-kbd-loadkeys=/bin/loadkeys \
+    --with-kbd-setfont=/bin/setfont \
+    --with-dbuspolicydir=/etc/dbus-1/system.d \
+    --with-dbussessionservicedir=/usr/share/dbus-1/services \
+    --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
+    --config-cache" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 
 # install
 build2 "make install" $_log
-
-build2 "mv -v /usr/bin/fuser /bin" $_log
-build2 "mv -v /usr/bin/killall /bin" $_log
 
 # clean up
 cd ..

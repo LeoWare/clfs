@@ -43,7 +43,7 @@ build2 "CC=\"gcc ${BUILD32}\" ./configure \
     --cache-file=config.cache" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make LDEMULATION=elf_i386 check" $_log
 

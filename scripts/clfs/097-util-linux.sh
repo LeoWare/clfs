@@ -52,7 +52,7 @@ build2 "CC=\"gcc ${BUILD64}\" \
     --docdir=/usr/share/doc/util-linux-2.29.2" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "chown -Rv nobody . && \
 #su nobody -s /bin/bash -c \"PATH=$PATH make -k check\"" $_log

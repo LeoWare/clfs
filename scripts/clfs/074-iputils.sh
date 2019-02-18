@@ -44,14 +44,14 @@ build2 "make CC=\"gcc ${BUILD64}\" \
     TARGETS=\"clockdiff ping rdisc tracepath tracepath6 traceroute6\"" $_log
 
 # install
-build2 "install -v -m755 ping /bin && \
-install -v -m755 clockdiff /usr/bin && \
-install -v -m755 rdisc /usr/bin && \
-install -v -m755 tracepath /usr/bin && \
-install -v -m755 trace{path,route}6 /usr/bin && \
-install -v -m644 doc/*.8 /usr/share/man/man8 && \
-ln -sv ping /bin/ping4 && \ 
-ln -sv ping /bin/ping6" $_log
+build2 "install -v -m755 ping /bin" $_log
+build2 "install -v -m755 clockdiff /usr/bin" $_log
+build2 "install -v -m755 rdisc /usr/bin" $_log
+build2 "install -v -m755 tracepath /usr/bin" $_log
+build2 "install -v -m755 trace{path,route}6 /usr/bin" $_log
+build2 "install -v -m644 doc/*.8 /usr/share/man/man8" $_log
+build2 "ln -sfv ping /bin/ping4" $_log
+build2 "ln -sfv ping /bin/ping6" $_log
 
 # clean up
 cd ..

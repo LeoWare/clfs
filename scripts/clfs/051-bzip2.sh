@@ -15,9 +15,9 @@ _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
 
 _red="\\033[1;31m"
 _green="\\033[1;32m"
-_yellow="\\033[1;33m"
+_yellow="\e[1;33m"
 _cyan="\\033[1;36m"
-_normal="\\033[0;39m"
+_normal="\e[0;39m"
 
 
 printf "${_green}==>${_normal} Building $_package-$_version"
@@ -39,7 +39,7 @@ cd $_sourcedir
 # prep
 build2 "sed -i -e 's:ln -s -f \$(PREFIX)/bin/:ln -s :' Makefile" $_log
 build2 "sed -i 's@X)/man@X)/share/man@g' Makefile" $_log
-buils2 "sed -i 's@/lib\(/\| \|$\)@/lib64\1@g' Makefile" $_log
+build2 "sed -i 's@/lib\(/\| \|$\)@/lib64\1@g' Makefile" $_log
 
 # build
 build2 "make -f Makefile-libbz2_so CC=\"gcc ${BUILD64}\" CXX=\"g++ ${BUILD64}\"" $_log

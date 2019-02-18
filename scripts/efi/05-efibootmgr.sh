@@ -48,7 +48,7 @@ cd $_sourcedir
 
 # build
 #build2 "make ARCH=x86_64 CROSS_COMPILE=${CLFS_TARGET}- menuconfig" $_log
-build2 "make PREFIX=$TOOLS EFIDIR=/boot/efi CFLAGS=\"-I/tools/include/efivar\"" $_log
+build2 "PKG_CONFIG_PATH=/tools/lib/pkgconfig make PREFIX=$TOOLS EFIDIR=/boot/efi CFLAGS=\"-I/tools/include/efivar\"" $_log
 
 # install
 #build2 "make PREFIX=$TOOLS install" $_log

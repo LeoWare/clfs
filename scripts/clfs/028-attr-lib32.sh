@@ -47,7 +47,7 @@ build2 "CC=\"gcc ${BUILD32}\" \
     --libexecdir=/usr/lib" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make -j1 tests root-tests" $_log
 

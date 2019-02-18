@@ -23,7 +23,7 @@ _normal="\\033[0;39m"
 printf "${_green}==>${_normal} Building $_package-$_version"
 
 [ -e $_completed ] && {
-	msg ":  ${_yellow}SKIPPING${_normal}"
+	msg ":  \\${_yellow}SKIPPING\\${_normal}"
 	exit 0
 }
 
@@ -44,7 +44,7 @@ build2 "CC=\"gcc ${BUILD64}\" ./configure \
     --cache-file=config.cache" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make LDEMULATION=elf_i386 check" $_log
 

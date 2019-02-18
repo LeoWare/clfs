@@ -44,9 +44,9 @@ build2 "CC=\"gcc ${BUILD64}\" \
     --docdir=/usr/share/doc/xz-5.2.3" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

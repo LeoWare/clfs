@@ -44,7 +44,7 @@ LDFLAGS=\"-Wl,-rpath-link,/usr/lib64:/lib64 ${BUILD64}\" \
     --libdir=/usr/lib64" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 

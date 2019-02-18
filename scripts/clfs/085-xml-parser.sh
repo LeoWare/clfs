@@ -7,7 +7,7 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}   # script name minus the path
 
-_package="xml-parser"
+_package="XML-Parser"
 _version="2.44"
 _sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
@@ -40,9 +40,9 @@ cd $_sourcedir
 build2 "USE_ARCH=64 perl Makefile.PL" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make test" $_log
+#build2 "make test" $_log
 
 # install
 build2 "make install" $_log

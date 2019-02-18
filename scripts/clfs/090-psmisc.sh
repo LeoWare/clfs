@@ -60,7 +60,7 @@ build2 "CC=\"gcc ${BUILD32}\" PKG_CONFIG_PATH=\"${PKG_CONFIG_PATH32}\" \
     --config-cache" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 

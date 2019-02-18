@@ -23,7 +23,7 @@ _normal="\\033[0;39m"
 printf "${_green}==>${_normal} Building $_package-$_version"
 
 [ -e $_completed ] && {
-	msg ":  ${_yellow}SKIPPING${_normal}"
+	msg ":  \\${_yellow}SKIPPING\\${_normal}"
 	exit 0
 }
 
@@ -37,13 +37,13 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "sed -i '/ARPD/d' Makefile
-            sed -i 's/arpd.8//' man/man8/Makefile
-            sed -i '/tc-simple/s@tc-skbmod.8 @@' man/man8/Makefile
+build2 "sed -i '/ARPD/d' Makefile &&
+            sed -i 's/arpd.8//' man/man8/Makefile &&
+            sed -i '/tc-simple/s@tc-skbmod.8 @@' man/man8/Makefile &&
             rm -v doc/arpd.sgml" $_log
 
 # build
-build2 "make CC="gcc ${BUILD64}" LIBDIR=/usr/lib64" $_log
+build2 "make CC=\"gcc ${BUILD64}\" LIBDIR=/usr/lib64" $_log
 
 # install
 build2 "make LIBDIR=/usr/lib64 \

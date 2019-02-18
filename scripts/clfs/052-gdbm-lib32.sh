@@ -37,13 +37,13 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "CC\"gcc ${BUILD32}\" \
+build2 "CC=\"gcc ${BUILD32}\" \
     ./configure \
     --prefix=/usr \
     --enable-libgdbm-compat" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 build2 "make check" $_log
 

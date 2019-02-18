@@ -8,7 +8,7 @@ source $TOPDIR/function.inc
 _prgname=${0##*/}   # script name minus the path
 
 _package="less"
-_version="491"
+_version="530"
 _sourcedir="$_package-$_version"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
 _completed="$LFS_TOP/$LOGDIR/$_prgname.completed"
@@ -42,7 +42,7 @@ build2 "CC=\"gcc ${BUILD64}\" ./configure \
     --sysconfdir=/etc" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 

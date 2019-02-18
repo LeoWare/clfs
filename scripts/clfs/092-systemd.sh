@@ -56,6 +56,7 @@ build2 "CC=\"gcc ${BUILD64}\" PKG_CONFIG_PATH=\"${PKG_CONFIG_PATH64}\" \
     --sysconfdir=/etc \
     --localstatedir=/var \
     --libexecdir=/usr/lib64 \
+    --disable-tests        \
     --docdir=/usr/share/doc/systemd-233 \
     --with-rootprefix="" \
     --with-rootlibdir=/lib64 \
@@ -73,14 +74,14 @@ build2 "CC=\"gcc ${BUILD64}\" PKG_CONFIG_PATH=\"${PKG_CONFIG_PATH64}\" \
     --config-cache" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 build2 "sed -e 's@test/udev-test.pl @@'  \
         -e 's@test-copy\$(EXEEXT) @@' \
         -i Makefile.in" $_log
 
-build2 "sed -i \"s:minix:ext4:g\" src/test/test-path-util.c" $_log
-build2 "make check" $_log
+#build2 "sed -i \"s:minix:ext4:g\" src/test/test-path-util.c" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log
@@ -94,7 +95,7 @@ for tool in runlevel reboot shutdown poweroff halt telinit; do
 done
 build2 "ln -sfv ../lib/systemd/systemd /sbin/init" $_log
 
-# TODO: Might not want to do this here later on
+# TODO: Might not want to do this here
 systemd-machine-id-setup
 
 cat > /etc/os-release << "EOF"

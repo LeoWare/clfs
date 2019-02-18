@@ -48,7 +48,7 @@ build2 "CC=\"gcc ${BUILD64}\" ./configure \
     --with-group-name-max-length=32" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make -k check" $_log
 

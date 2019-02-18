@@ -49,7 +49,7 @@ build2 "CC=\"gcc ${BUILD64}\" USE_ARCH=64 PKG_CONFIG_PATH=${PKG_CONFIG_PATH64} \
     SYSTEMD_LIBS=\"-L/lib64 -lsystemd\"" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 # install
 build2 "make install" $_log

@@ -30,9 +30,9 @@ unpack "${PWD}" "${_package}-${_version}"
 cd $_sourcedir
 
 # prep
-build2 "./configure
-    --prefix=$CROSS_TOOLS
-    --enable-cxx
+build2 "./configure \
+    --prefix=$CROSS_TOOLS \
+    --enable-cxx \
     --disable-static" $_log
 
 # build

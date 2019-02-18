@@ -7,7 +7,7 @@ source $TOPDIR/config.inc
 source $TOPDIR/function.inc
 _prgname=${0##*/}   # script name minus the path
 
-_package="strip-debug"
+_package="configuration"
 _version="20170803"
 _sourcedir="${_package}-${_version}"
 _log="$LFS_TOP/$LOGDIR/$_prgname.log"
@@ -138,10 +138,10 @@ ln -sfv /run/systemd/network/resolv.conf /etc/resolv.conf
 
  
  # mask udev's 99-default.link                                                                                             │
-ln -s /dev/null /etc/systemd/network/99-default.link
+ln -sfv /dev/null /etc/systemd/network/99-default.link
 
-groupadd -g 78 systemd-timesync
-useradd -g systemd-timesync -u 78 -d /dev/null -s /bin/false systemd-timesync
+#groupadd -g 78 systemd-timesync
+#useradd -g systemd-timesync -u 78 -d /dev/null -s /bin/false systemd-timesync
 
 #systemctl enable systemd-timesyncd
 

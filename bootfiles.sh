@@ -34,7 +34,8 @@ do
 done
 
 # execute all bootfiles scripts
-for script in `find $LFS$LFS_TOP/scripts/boot -type f | sort`
+for script in `find $LFS$LFS_TOP/scripts/chroot -type f | sort`
+#for script in `find $LFS$LFS_TOP/scripts/boot -type f | sort`
 do
 	cd $LFS$LFS_TOP/$BUILDDIR
 

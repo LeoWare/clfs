@@ -45,7 +45,7 @@ LDFLAGS=\"-Wl,-rpath-link,/usr/lib:/lib ${BUILD32}\" \
     --enable-cxx" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 # install
 build2 "make install" $_log

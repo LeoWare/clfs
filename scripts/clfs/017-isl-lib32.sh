@@ -44,7 +44,7 @@ LDFLAGS=\"-Wl,-rpath-link,/usr/lib:/lib ${BUILD32}\" \
     --host=${CLFS_TARGET32}" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make check" $_log
 

@@ -46,9 +46,9 @@ build2 "CC=\"gcc ${BUILD64}\" \
 build2 "sed -i 's@\(^#define DEFAULT_EDITOR_PROGRAM \).*@\1\"vi\"@' lib/config.h" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

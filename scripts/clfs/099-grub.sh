@@ -46,22 +46,22 @@ cd $_sourcedir
 
 build2 "patch -Np1 -i ../../sources/grub-2.02-gcc-8-fixes-1.patch" $_log
 build2 "./configure \
-    --prefix=$TOOLS \
+    --prefix=/usr \
     --build=${CLFS_HOST} \
     --host=${CLFS_TARGET} \
-    --libdir=$TOOLS/lib64 \
+    --libdir=/lib64 \
     --disable-werror \
     --enable-grub-mkfont=no \
-    --with-bootdir=tools/boot \
+    --with-bootdir=/boot \
     --with-platform=efi \
     --disable-efiemu \
-    --sbindir=$TOOLS/sbin \
-    --sysconfdir=$TOOLS/etc" $_log
+    --sbindir=/sbin \
+    --sysconfdir=/etc" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
 
 # install
 build2 "make install" $_log

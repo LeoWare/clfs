@@ -44,9 +44,10 @@ build2 "FORCE_UNSAFE_CONFIGURE=1 CC=\"gcc ${BUILD64}\" \
     --libexecdir=/usr/sbin" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
-build2 "make check" $_log
+#build2 "make check" $_log
+
 # install
 build2 "make install" $_log
 

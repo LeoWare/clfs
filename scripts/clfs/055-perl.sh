@@ -57,7 +57,7 @@ build2 "./configure.gnu \
     -Duseshrplib" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make test" $_log
 

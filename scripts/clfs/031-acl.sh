@@ -47,7 +47,7 @@ build2 "CC=\"gcc ${BUILD64}\" \
     --libexecdir=/usr/lib64" $_log
 
 # build
-build2 "make" $_log
+build2 "make $MKFLAGS" $_log
 
 #build2 "make tests" $_log
 
